@@ -5,6 +5,12 @@
 This is a Node.js application built with ReactJs, Express.js and MongoDB using Mongoose. It provides a basic setup for creating a UI and RESTful API with CORS support.
 
 ## Installation
+```
+Prerequisites:
+   - MongoDB should be installed
+   - Nodejs version used : 18.12.1
+   - npm version used    : 9.7.1
+```
 
 To get started with the backend application, follow these steps:
 
