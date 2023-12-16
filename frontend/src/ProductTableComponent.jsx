@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from "react-router-dom";
 
-
 const ProductTableComponent = () => {
-
+  // State variables to manage category name, product name, product rate, product tax,
+  // visibility of the bill element, product data, table data, categories, and category products
   const [categoryName, setCategoryName] = useState('Sandal');
   const [productName, setProductName] = useState('');
   const [productRate, setProductRate] = useState('');
@@ -15,8 +15,7 @@ const ProductTableComponent = () => {
   const [categories, setCategories] = useState([]);
   const [categoryProducts, setCategoryProducts] = useState([]);
 
-
-
+  // useEffect to fetch categories and set the default category when the component mounts
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -31,14 +30,17 @@ const ProductTableComponent = () => {
         console.error('Error fetching categories:', error.message);
       }
     };
-    fetchCategories();
-    if (categories.length > 0) {
-      setCategoryName(categories[0].name)
-    } else {
-      setCategoryName("none")
-    }
-  }, [])
 
+    fetchCategories();
+
+    if (categories.length > 0) {
+      setCategoryName(categories[0].name);
+    } else {
+      setCategoryName("none");
+    }
+  }, []);
+
+  // useEffect to fetch products when the selected category changes
   useEffect(() => {
     const fetchProductsByCategory = async () => {
       try {
@@ -59,7 +61,7 @@ const ProductTableComponent = () => {
     fetchProductsByCategory();
   }, [categoryName]);
 
-
+  // Function to fetch product details based on the selected product name
   const fetchProductDetails = async () => {
     try {
       const response = await axios.get(`http://localhost:3000/api/product/${productName}`);
@@ -77,22 +79,25 @@ const ProductTableComponent = () => {
     }
   };
 
-
+  // Function to handle adding a new product to the list
   const handleAddProduct = () => {
     if (categoryName.trim() !== '' && productName.trim() !== '') {
       fetchProductDetails();
     }
   };
 
+  // Function to handle submitting the form and generating the bill
   const handleSubmit = () => {
     console.log('Table Content:', tableData);
-    setIsVisible(true)
+    setIsVisible(true);
   };
 
+  // JSX for rendering the component
   return (
     <div>
       <h1>Screen 4</h1>
       <div>
+        {/* Dropdown to select a category */}
         <label>
           Category Name :{' '}
           <select
@@ -109,6 +114,7 @@ const ProductTableComponent = () => {
       </div>
 
       <div>
+        {/* Dropdown to select a product */}
         <label>
           Product Name :{' '}
           <select
@@ -123,10 +129,12 @@ const ProductTableComponent = () => {
           </select>
         </label>
       </div>
-      <Link to="/product"><button >Previous Screen</button></Link>
 
-      <button style={{marginLeft:"20px"}} onClick={handleAddProduct}>Add to List</button>
+      {/* Links to navigate to the previous and next screens */}
+      <Link to="/product"><button>Previous Screen</button></Link>
+      <button style={{ marginLeft: "20px" }} onClick={handleAddProduct}>Add to List</button>
 
+      {/* Display the product table if there are products added */}
       {tableData.length > 0 && (
         <div>
           <h2>Product Table:</h2>
@@ -151,18 +159,18 @@ const ProductTableComponent = () => {
             </tbody>
           </table>
           <button onClick={handleSubmit}>Generate Bill</button>
-          {isVisible && <BillElement tableData={tableData} />}
 
+          {/* Display the bill element if isVisible is true */}
+          {isVisible && <BillElement tableData={tableData} />}
         </div>
       )}
-
-
     </div>
   );
 };
 
-
+// BillElement component to display the bill details
 const BillElement = ({ tableData }) => {
+  // Function to calculate totals for rate, tax, and sum total
   const calculateTotals = () => {
     let totalRate = 0;
     let totalTax = 0;
@@ -176,8 +184,10 @@ const BillElement = ({ tableData }) => {
     return { totalRate, totalTax, sumTotal };
   };
 
+  // Calculate totals
   const { totalRate, totalTax, sumTotal } = calculateTotals();
 
+  // JSX for rendering the bill details
   return (
     <div>
       <h2>Bill Details:</h2>
@@ -197,14 +207,4 @@ const BillElement = ({ tableData }) => {
             <td>Total Tax</td>
             <td>{totalTax}</td>
           </tr>
-          <tr>
-            <td>Sum Total</td>
-            <td>{sumTotal}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  );
-};
-
-export default ProductTableComponent;
+          <
